@@ -20,10 +20,8 @@
 @implementation LBXZBarWrapper
 
 
-- (instancetype)initWithPreView:(UIView*)preView barCodeType:(zbar_symbol_type_t)barCodeType block:(void(^)(NSArray<LBXZbarResult*> *result))block
-{
-    if (self = [super init])
-    {
+- (instancetype)initWithPreView:(UIView*)preView barCodeType:(zbar_symbol_type_t)barCodeType block:(void(^)(NSArray<LBXZbarResult*> *result))block {
+    if (self = [super init]) {
         self.success = block;
         
         self.readerView= [[ZBarReaderView alloc]init];
@@ -42,8 +40,7 @@
     return self;
 }
 
-- (void)changeBarCode:(zbar_symbol_type_t)zbarFormat
-{
+- (void)changeBarCode:(zbar_symbol_type_t)zbarFormat {
     //二维码/条形码识别设置
     ZBarImageScanner *scanner = _readerView.scanner;
     [scanner setSymbology: zbarFormat
@@ -51,25 +48,21 @@
                        to: 1];
 }
 
-- (void)start
-{
+- (void)start {
     [_readerView start];
 }
 
--(void)stop
-{
+- (void)stop {
     [_readerView stop];
 }
 
-- (void)openOrCloseFlash
-{
+- (void)openOrCloseFlash {
     _readerView.torchMode = 1 - _readerView.torchMode;
 }
 
 #pragma mark -- ZBarReaderViewDelegate
 
-- (void) readerView: (ZBarReaderView*) readerView  didReadSymbols: (ZBarSymbolSet*) symbols  fromImage: (UIImage*) image
-{
+- (void) readerView: (ZBarReaderView*) readerView  didReadSymbols: (ZBarSymbolSet*) symbols  fromImage: (UIImage*) image {
     [self stop];
     
     ZBarSymbol *symbol = nil;
@@ -93,8 +86,7 @@
     }
 }
 
-+ (void)recognizeImage:(UIImage*)image block:(void(^)(NSArray<LBXZbarResult*> *result))block
-{
++ (void)recognizeImage:(UIImage*)image block:(void(^)(NSArray<LBXZbarResult*> *result))block {
     UIImage * aImage = image;
     ZBarReaderController *read = [ZBarReaderController new];
     CGImageRef cgImageRef = aImage.CGImage;
@@ -120,8 +112,7 @@
     }
 }
 
-+ (NSString*)convertFormat2String:(zbar_symbol_type_t)format
-{
++ (NSString*)convertFormat2String:(zbar_symbol_type_t)format {
     NSString* str = @"";
     switch (format) {
         case ZBAR_NONE:
@@ -196,9 +187,5 @@
     
     return str;
 }
-
-
-
-
 
 @end

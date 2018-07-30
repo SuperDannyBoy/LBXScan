@@ -24,7 +24,7 @@
 #import "ZXReader.h"
 #import "ZXResult.h"
 
-@interface LBXZXCapture ()
+@interface LBXZXCapture () <CALayerDelegate>
 
 @property (nonatomic, strong) CALayer *binaryLayer;
 @property (nonatomic, assign) BOOL cameraIsReady;
@@ -184,8 +184,7 @@
   [self.input.device unlockForConfiguration];
 }
 
-- (void)changeTorch
-{
+- (void)changeTorch {
     AVCaptureTorchMode torch = self.input.device.torchMode;
     
     switch (self.input.device.torchMode) {
@@ -200,7 +199,6 @@
         default:
             break;
     }
-    
     
     [self.input.device lockForConfiguration:nil];
     self.input.device.torchMode = torch;

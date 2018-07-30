@@ -5,8 +5,7 @@
 
 @implementation LBXScanResult
 
-- (instancetype)initWithScanString:(NSString*)str imgScan:(UIImage*)img barCodeType:(NSString*)type
-{
+- (instancetype)initWithScanString:(NSString*)str imgScan:(UIImage*)img barCodeType:(NSString*)type {
     if (self = [super init]) {
         
         self.strScanned = str;

@@ -25,11 +25,8 @@ typedef void(^blockScan)(ZXBarcodeFormat barcodeFormat,NSString *str,UIImage *sc
 
 @implementation ZXingWrapper
 
-
-- (id)init
-{
-    if ( self = [super init] )
-    {
+- (instancetype)init {
+    if ( self = [super init] ) {
         self.capture = [[LBXZXCapture alloc] init];
         self.capture.camera = self.capture.back;
         self.capture.focusMode = AVCaptureFocusModeContinuousAutoFocus;
@@ -40,8 +37,7 @@ typedef void(^blockScan)(ZXBarcodeFormat barcodeFormat,NSString *str,UIImage *sc
     return self;
 }
 
-- (id)initWithPreView:(UIView*)preView block:(void(^)(ZXBarcodeFormat barcodeFormat,NSString *str,UIImage *scanImg))block
-{
+- (instancetype)initWithPreView:(UIView*)preView block:(void(^)(ZXBarcodeFormat barcodeFormat,NSString *str,UIImage *scanImg))block {
     if (self = [super init]) {
         
         self.capture = [[LBXZXCapture alloc] init];
@@ -65,38 +61,33 @@ typedef void(^blockScan)(ZXBarcodeFormat barcodeFormat,NSString *str,UIImage *sc
     return self;
 }
 
-- (void)setScanRect:(CGRect)scanRect
-{
+- (void)setScanRect:(CGRect)scanRect {
     self.capture.scanRect = scanRect;
 }
 
-- (void)start
-{
+- (void)start {
     self.bNeedScanResult = YES;
     [self.capture start];
     
 }
 
-- (void)stop
-{
+- (void)stop {
     self.bNeedScanResult = NO;
     [self.capture stop];
 }
 
-- (void)openTorch:(BOOL)on_off
-{
+- (void)openTorch:(BOOL)on_off {
     [self.capture setTorch:on_off];
 }
-- (void)openOrCloseTorch
-{
+
+- (void)openOrCloseTorch {
     [self.capture changeTorch];
 }
 
 
 #pragma mark - ZXCaptureDelegate Methods
 
-- (void)captureResult:(ZXCapture *)capture result:(ZXResult *)result scanImage:(UIImage *)img
-{
+- (void)captureResult:(ZXCapture *)capture result:(ZXResult *)result scanImage:(UIImage *)img {
     if (!result) return;
     
     if (self.bNeedScanResult == NO) {
@@ -104,8 +95,7 @@ typedef void(^blockScan)(ZXBarcodeFormat barcodeFormat,NSString *str,UIImage *sc
         return;
     }
     
-    if ( _block )
-    {
+    if ( _block ) {
         [self stop];
         
         _block(result.barcodeFormat,result.text,img);
@@ -113,8 +103,7 @@ typedef void(^blockScan)(ZXBarcodeFormat barcodeFormat,NSString *str,UIImage *sc
 }
 
 
-+ (UIImage*)createCodeWithString:(NSString*)str size:(CGSize)size CodeFomart:(ZXBarcodeFormat)format
-{
++ (UIImage*)createCodeWithString:(NSString*)str size:(CGSize)size CodeFomart:(ZXBarcodeFormat)format {
     ZXMultiFormatWriter *writer = [[ZXMultiFormatWriter alloc] init];
     ZXBitMatrix *result = [writer encode:str
                                   format:format
@@ -131,8 +120,7 @@ typedef void(^blockScan)(ZXBarcodeFormat barcodeFormat,NSString *str,UIImage *sc
 }
 
 
-+ (void)recognizeImage:(UIImage*)image block:(void(^)(ZXBarcodeFormat barcodeFormat,NSString *str))block;
-{
++ (void)recognizeImage:(UIImage*)image block:(void(^)(ZXBarcodeFormat barcodeFormat,NSString *str))block; {
     ZXCGImageLuminanceSource *source = [[ZXCGImageLuminanceSource alloc] initWithCGImage:image.CGImage];
     
     ZXHybridBinarizer *binarizer = [[ZXHybridBinarizer alloc] initWithSource: source];
@@ -158,8 +146,5 @@ typedef void(^blockScan)(ZXBarcodeFormat barcodeFormat,NSString *str,UIImage *sc
     
     block(result.barcodeFormat,result.text);
 }
-
-
-
 
 @end

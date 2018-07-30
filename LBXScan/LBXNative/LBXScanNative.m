@@ -43,22 +43,19 @@
 @implementation LBXScanNative
 
 
-- (void)setNeedCaptureImage:(BOOL)isNeedCaputureImg
-{
+- (void)setNeedCaptureImage:(BOOL)isNeedCaputureImg {
     _isNeedCaputureImage = isNeedCaputureImg;
 }
 
 
-- (instancetype)initWithPreView:(UIView*)preView ObjectType:(NSArray*)objType cropRect:(CGRect)cropRect success:(void(^)(NSArray<LBXScanResult*> *array))block
-{
+- (instancetype)initWithPreView:(UIView*)preView ObjectType:(NSArray*)objType cropRect:(CGRect)cropRect success:(void(^)(NSArray<LBXScanResult*> *array))block {
     if (self = [super init]) {
         [self initParaWithPreView:preView ObjectType:objType cropRect:cropRect success:block];
     }
     return self;
 }
 
-- (instancetype)initWithPreView:(UIView*)preView ObjectType:(NSArray*)objType success:(void(^)(NSArray<LBXScanResult*> *array))block
-{
+- (instancetype)initWithPreView:(UIView*)preView ObjectType:(NSArray*)objType success:(void(^)(NSArray<LBXScanResult*> *array))block {
     if (self = [super init]) {
         
         [self initParaWithPreView:preView ObjectType:objType cropRect:CGRectZero success:block];
@@ -68,8 +65,7 @@
 }
 
 
-- (void)initParaWithPreView:(UIView*)videoPreView ObjectType:(NSArray*)objType cropRect:(CGRect)cropRect success:(void(^)(NSArray<LBXScanResult*> *array))block
-{
+- (void)initParaWithPreView:(UIView*)videoPreView ObjectType:(NSArray*)objType cropRect:(CGRect)cropRect success:(void(^)(NSArray<LBXScanResult*> *array))block {
     self.arrayBarCodeType = objType;
     self.blockScanResult = block;
     self.videoPreView = videoPreView;
@@ -117,22 +113,17 @@
     
    // videoScaleAndCropFactor
     
-    if ([_session canAddInput:_input])
-    {
+    if ([_session canAddInput:_input]) {
         [_session addInput:_input];
     }
     
-    if ([_session canAddOutput:_output])
-    {
+    if ([_session canAddOutput:_output]) {
         [_session addOutput:_output];
     }
 
-    if ([_session canAddOutput:_stillImageOutput])
-    {
+    if ([_session canAddOutput:_stillImageOutput]) {
         [_session addOutput:_stillImageOutput];
     }
-    
- 
  
     
     // 条码类型 AVMetadataObjectTypeQRCode
@@ -174,16 +165,14 @@
     
     
     //先进行判断是否支持控制对焦,不开启自动对焦功能，很难识别二维码。
-    if (_device.isFocusPointOfInterestSupported &&[_device isFocusModeSupported:AVCaptureFocusModeAutoFocus])
-    {
+    if (_device.isFocusPointOfInterestSupported &&[_device isFocusModeSupported:AVCaptureFocusModeAutoFocus]) {
         [_input.device lockForConfiguration:nil];
         [_input.device setFocusMode:AVCaptureFocusModeContinuousAutoFocus];
         [_input.device unlockForConfiguration];
     }
 }
 
-- (CGFloat)getVideoMaxScale
-{
+- (CGFloat)getVideoMaxScale {
     [_input.device lockForConfiguration:nil];
     AVCaptureConnection *videoConnection = [self connectionWithMediaType:AVMediaTypeVideo fromConnections:[[self stillImageOutput] connections]];
     CGFloat maxScale = videoConnection.videoMaxScaleAndCropFactor;
@@ -192,8 +181,7 @@
     return maxScale;
 }
 
-- (void)setVideoScale:(CGFloat)scale
-{
+- (void)setVideoScale:(CGFloat)scale {
     [_input.device lockForConfiguration:nil];
     
     AVCaptureConnection *videoConnection = [self connectionWithMediaType:AVMediaTypeVideo fromConnections:[[self stillImageOutput] connections]];
@@ -209,24 +197,19 @@
     _videoPreView.transform = CGAffineTransformScale(transform, zoom, zoom);
 }
 
-- (void)setScanRect:(CGRect)scanRect
-{
+- (void)setScanRect:(CGRect)scanRect {
     //识别区域设置
     if (_output) {
         _output.rectOfInterest = [self.preview metadataOutputRectOfInterestForRect:scanRect];
     }
-    
 }
 
-- (void)changeScanType:(NSArray*)objType
-{    
+- (void)changeScanType:(NSArray*)objType {
     _output.metadataObjectTypes = objType;
 }
 
-- (void)startScan
-{
-    if ( _input && !_session.isRunning )
-    {
+- (void)startScan {
+    if ( _input && !_session.isRunning ) {
         [_session startRunning];
         bNeedScanResult = YES;
         
@@ -237,19 +220,15 @@
     bNeedScanResult = YES;
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ( object == _input.device ) {
-        
         NSLog(@"flash change");
     }
 }
 
-- (void)stopScan
-{
+- (void)stopScan {
     bNeedScanResult = NO;
-    if ( _input && _session.isRunning )
-    {
+    if ( _input && _session.isRunning ) {
         bNeedScanResult = NO;
         [_session stopRunning];
         
@@ -257,15 +236,13 @@
     }
 }
 
-- (void)setTorch:(BOOL)torch {   
-    
+- (void)setTorch:(BOOL)torch {
     [self.input.device lockForConfiguration:nil];
     self.input.device.torchMode = torch ? AVCaptureTorchModeOn : AVCaptureTorchModeOff;
     [self.input.device unlockForConfiguration];
 }
 
-- (void)changeTorch
-{
+- (void)changeTorch {
     AVCaptureTorchMode torch = self.input.device.torchMode;
    
     switch (_input.device.torchMode) {
@@ -287,8 +264,7 @@
 }
 
 
--(UIImage *)getImageFromLayer:(CALayer *)layer size:(CGSize)size
-{
+- (UIImage *)getImageFromLayer:(CALayer *)layer size:(CGSize)size {
     UIGraphicsBeginImageContextWithOptions(size, YES, [[UIScreen mainScreen]scale]);
     [layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
@@ -297,8 +273,7 @@
     return image;
 }
 
-- (AVCaptureConnection *)connectionWithMediaType:(NSString *)mediaType fromConnections:(NSArray *)connections
-{
+- (AVCaptureConnection *)connectionWithMediaType:(NSString *)mediaType fromConnections:(NSArray *)connections {
     for ( AVCaptureConnection *connection in connections ) {
         for ( AVCaptureInputPort *port in [connection inputPorts] ) {
             if ( [[port mediaType] isEqual:mediaType] ) {
@@ -309,18 +284,15 @@
     return nil;
 }
 
-- (void)captureImage
-{
+- (void)captureImage {
     AVCaptureConnection *stillImageConnection = [self connectionWithMediaType:AVMediaTypeVideo fromConnections:[[self stillImageOutput] connections]];
     
     
     [[self stillImageOutput] captureStillImageAsynchronouslyFromConnection:stillImageConnection
-                                                         completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error)
-     {
+                                                         completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
          [self stopScan];
          
-         if (imageDataSampleBuffer)
-         {
+         if (imageDataSampleBuffer) {
              NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
              
              UIImage *img = [UIImage imageWithData:imageData];
@@ -331,43 +303,30 @@
              }
          }
          
-         if (_blockScanResult)
-         {
+         if (_blockScanResult) {
              _blockScanResult(_arrayResult);
          }
-         
      }];
 }
 
 
 #pragma mark AVCaptureMetadataOutputObjectsDelegate
-- (void)captureOutput2:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
-{
+- (void)captureOutput2:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection {
    
-    
     //识别扫码类型
-    for(AVMetadataObject *current in metadataObjects)
-    {
-        if ([current isKindOfClass:[AVMetadataMachineReadableCodeObject class]] )
-        {
+    for(AVMetadataObject *current in metadataObjects) {
+        if ([current isKindOfClass:[AVMetadataMachineReadableCodeObject class]] ) {
             
             NSString *scannedResult = [(AVMetadataMachineReadableCodeObject *) current stringValue];
             NSLog(@"type:%@",current.type);
             NSLog(@"result:%@",scannedResult);
             
-            
-            
-         
-            
             //测试可以同时识别多个二维码
         }
     }
-    
-   
-    
 }
-- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
-{
+
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection {
     if (!bNeedScanResult) {
         return;
     }
@@ -377,17 +336,13 @@
     if (!_arrayResult) {
         
         self.arrayResult = [NSMutableArray arrayWithCapacity:1];
-    }
-    else
-    {
+    } else {
         [_arrayResult removeAllObjects];
     }
     
     //识别扫码类型
-    for(AVMetadataObject *current in metadataObjects)
-    {
-        if ([current isKindOfClass:[AVMetadataMachineReadableCodeObject class]] )
-        {
+    for(AVMetadataObject *current in metadataObjects) {
+        if ([current isKindOfClass:[AVMetadataMachineReadableCodeObject class]] ) {
             bNeedScanResult = NO;
             
             NSLog(@"type:%@",current.type);
@@ -405,18 +360,14 @@
         }
     }
     
-    if (_arrayResult.count < 1)
-    {
+    if (_arrayResult.count < 1) {
         bNeedScanResult = YES;
         return;
     }
     
-    if (_isNeedCaputureImage)
-    {
+    if (_isNeedCaputureImage) {
         [self captureImage];
-    }
-    else
-    {
+    } else {
         [self stopScan];
         
         if (_blockScanResult) {
@@ -430,8 +381,7 @@
  @brief  默认支持码的类别
  @return 支持类别 数组
  */
-- (NSArray *)defaultMetaDataObjectTypes
-{
+- (NSArray *)defaultMetaDataObjectTypes {
     NSMutableArray *types = [@[AVMetadataObjectTypeQRCode,
                                AVMetadataObjectTypeUPCECode,
                                AVMetadataObjectTypeCode39Code,
@@ -443,8 +393,7 @@
                                AVMetadataObjectTypePDF417Code,
                                AVMetadataObjectTypeAztecCode] mutableCopy];
     
-    if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_8_0)
-    {
+    if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_8_0) {
         [types addObjectsFromArray:@[
                                      AVMetadataObjectTypeInterleaved2of5Code,
                                      AVMetadataObjectTypeITF14Code,
@@ -456,10 +405,8 @@
 }
 
 #pragma mark --识别条码图片
-+ (void)recognizeImage:(UIImage*)image success:(void(^)(NSArray<LBXScanResult*> *array))block;
-{
-    if ([[[UIDevice currentDevice]systemVersion]floatValue] < 8.0 )
-    {
++ (void)recognizeImage:(UIImage*)image success:(void(^)(NSArray<LBXScanResult*> *array))block {
+    if ([[[UIDevice currentDevice]systemVersion]floatValue] < 8.0 ) {
         if (block) {
             LBXScanResult *result = [[LBXScanResult alloc]init];
             result.strScanned = @"只支持ios8.0之后系统";
@@ -471,8 +418,7 @@
     CIDetector*detector = [CIDetector detectorOfType:CIDetectorTypeQRCode context:nil options:@{ CIDetectorAccuracy : CIDetectorAccuracyHigh }];
     NSArray *features = [detector featuresInImage:[CIImage imageWithCGImage:image.CGImage]];
     NSMutableArray<LBXScanResult*> *mutableArray = [[NSMutableArray alloc]initWithCapacity:1];
-    for (int index = 0; index < [features count]; index ++)
-    {
+    for (int index = 0; index < [features count]; index ++) {
         CIQRCodeFeature *feature = [features objectAtIndex:index];
         NSString *scannedResult = feature.messageString;
         NSLog(@"result:%@",scannedResult);
@@ -530,8 +476,7 @@
 
 #pragma mark - 生成二维码，背景色及二维码颜色设置
 
-+ (UIImage*)createQRWithString:(NSString*)text QRSize:(CGSize)size
-{
++ (UIImage*)createQRWithString:(NSString*)text QRSize:(CGSize)size {
     NSData *stringData = [text dataUsingEncoding: NSUTF8StringEncoding];
     
     //生成
@@ -557,13 +502,9 @@
     CGImageRelease(cgImage);
     
     return codeImage;
-
-    
-    
 }
 //引用自:http://www.jianshu.com/p/e8f7a257b612
-+ (UIImage*)createQRWithString:(NSString*)text QRSize:(CGSize)size QRColor:(UIColor*)qrColor bkColor:(UIColor*)bkColor
-{
++ (UIImage*)createQRWithString:(NSString*)text QRSize:(CGSize)size QRColor:(UIColor*)qrColor bkColor:(UIColor*)bkColor {
     
     NSData *stringData = [text dataUsingEncoding: NSUTF8StringEncoding];
     
@@ -598,8 +539,7 @@
     return codeImage;
 }
 
-+ (UIImage*)createBarCodeWithString:(NSString*)text QRSize:(CGSize)size
-{
++ (UIImage*)createBarCodeWithString:(NSString*)text QRSize:(CGSize)size {
     
     NSData *data = [text dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:false];
     
@@ -620,8 +560,5 @@
     return [UIImage imageWithCIImage:transformedImage];
     
 }
-
-
-
 
 @end

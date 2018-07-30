@@ -26,15 +26,11 @@
 
 @implementation LBXScanLineAnimation
 
-
-
-- (void)stepAnimation
-{
+- (void)stepAnimation {
     if (!isAnimationing) {
         return;
     }
     
-   
     CGFloat leftx = _animationRect.origin.x + 5;
     CGFloat width = _animationRect.size.width - 10;
     
@@ -48,33 +44,24 @@
     
     [UIView animateWithDuration:0.5 animations:^{
          weakSelf.alpha = 1.0;
-        
-     
-        
-    } completion:^(BOOL finished)
-     {
-         
-     }];
+    } completion:^(BOOL finished) {
+    
+    }];
     
     [UIView animateWithDuration:3 animations:^{
         CGFloat leftx = _animationRect.origin.x + 5;
         CGFloat width = _animationRect.size.width - 10;
         
-        
-        
         weakSelf.frame = CGRectMake(leftx, _animationRect.origin.y + _animationRect.size.height - 8, width, 4);
         
-    } completion:^(BOOL finished)
-     {
-         self.hidden = YES;
-         [weakSelf performSelector:@selector(stepAnimation) withObject:nil afterDelay:0.3];
-     }];
+    } completion:^(BOOL finished) {
+        self.hidden = YES;
+        [weakSelf performSelector:@selector(stepAnimation) withObject:nil afterDelay:0.3];
+    }];
 }
 
 
-
-- (void)startAnimatingWithRect:(CGRect)animationRect InView:(UIView *)parentView Image:(UIImage*)image
-{
+- (void)startAnimatingWithRect:(CGRect)animationRect InView:(UIView *)parentView Image:(UIImage*)image {
     if (isAnimationing) {
         return;
     }
@@ -98,54 +85,43 @@
     [self startAnimating_UIViewAnimation];
     
 //    [self startAnimating_NSTimer];
-    
-    
 }
 
-- (void)startAnimating_UIViewAnimation
-{
+- (void)startAnimating_UIViewAnimation {
      [self stepAnimation];
 }
 
-- (void)startAnimating_NSTimer
-{
+- (void)startAnimating_NSTimer {
     timer = [NSTimer scheduledTimerWithTimeInterval:.02 target:self selector:@selector(scanLineAnimation) userInfo:nil repeats:YES];
 }
 
--(void)scanLineAnimation
-{
+- (void)scanLineAnimation {
     CGFloat centery = CGRectGetMinY(_animationRect) + CGRectGetHeight(_animationRect)/2;
     CGFloat leftx = _animationRect.origin.x + 5;
     CGFloat width = _animationRect.size.width - 10;
     
-    if (down)
-    {
+    if (down) {
         num++;
         
         self.frame = CGRectMake(leftx, centery+2*num, width, 2);
         
-        if (centery+2*num > (CGRectGetMinY(_animationRect) + CGRectGetHeight(_animationRect) - 5 ) )
-        {
+        if (centery+2*num > (CGRectGetMinY(_animationRect) + CGRectGetHeight(_animationRect) - 5 ) ) {
             down = NO;
         }
-    }
-    else {
+    } else {
         num --;
         self.frame = CGRectMake(leftx, centery+2*num, width, 2);
-        if (centery+2*num < (CGRectGetMinY(_animationRect) + 5 ) )
-        {
+        if (centery+2*num < (CGRectGetMinY(_animationRect) + 5 ) ) {
             down = YES;
         }
     }
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [self stopAnimating];
 }
 
-- (void)stopAnimating
-{
+- (void)stopAnimating {
     if (isAnimationing) {
         
         isAnimationing = NO;

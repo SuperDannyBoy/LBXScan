@@ -19,8 +19,7 @@
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
+- (void)drawRect:(CGRect)rect {
     // Drawing code
     
     UIColor *colorLine = [UIColor whiteColor];
@@ -54,8 +53,7 @@
     CGContextStrokePath(ctx);
 }
 
-- (UIImage *) toImage:(UIColor*)color size:(CGSize)size
-{
+- (UIImage *) toImage:(UIColor*)color size:(CGSize)size {
     CGRect rect=CGRectMake(0.0f, 0.0f, size.width, size.height);
     UIGraphicsBeginImageContext(rect.size);
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -68,8 +66,7 @@
     return theImage;
 }
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
     }
     
@@ -85,8 +82,7 @@
     return self;
 }
 
-- (void)sliderValueChange
-{
+- (void)sliderValueChange {
 //    NSLog(@"%f",self.slider.value);
     
     if (_block) {
@@ -96,8 +92,7 @@
 
 //- (void)addTarget:(nullable id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents;
 
-- (UISlider*)slider
-{
+- (UISlider*)slider {
     if (!_slider) {
         
         _slider = [[UISlider alloc]init];
@@ -108,13 +103,11 @@
     return _slider;
 }
 
-- (void)setMaximunValue:(CGFloat)value
-{
+- (void)setMaximunValue:(CGFloat)value {
     self.slider.maximumValue = value;
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
     
     CGFloat borderDiff = 20;

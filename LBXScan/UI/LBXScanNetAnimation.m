@@ -21,7 +21,7 @@
 
 @implementation LBXScanNetAnimation
 
-- (instancetype)init{
+- (instancetype)init {
     self = [super init];
     if (self) {
         self.clipsToBounds = YES;
@@ -30,15 +30,14 @@
     return self;
 }
 
-- (UIImageView *)scanImageView{
+- (UIImageView *)scanImageView {
     if (!_scanImageView) {
         _scanImageView = [[UIImageView alloc] init];
     }
     return _scanImageView;
 }
 
-- (void)stepAnimation
-{
+- (void)stepAnimation {
     if (!isAnimationing) {
         return;
     }
@@ -62,13 +61,12 @@
      }];
 }
 
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
     [self performSelector:@selector(stepAnimation) withObject:nil afterDelay:0.3];
 }
 
 
-- (void)startAnimatingWithRect:(CGRect)animationRect InView:(UIView *)parentView Image:(UIImage*)image
-{
+- (void)startAnimatingWithRect:(CGRect)animationRect InView:(UIView *)parentView Image:(UIImage*)image {
     [self.scanImageView setImage:image];
     
     self.animationRect = animationRect;
@@ -83,13 +81,11 @@
 }
 
 
-- (void)dealloc
-{
+- (void)dealloc {
     [self stopAnimating];
 }
 
-- (void)stopAnimating
-{
+- (void)stopAnimating {
     self.hidden = YES;
     isAnimationing = NO;
     

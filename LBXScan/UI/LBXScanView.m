@@ -46,10 +46,8 @@ NS_ASSUME_NONNULL_END
 @implementation LBXScanView
 
 
--(id)initWithFrame:(CGRect)frame style:(LBXScanViewStyle*)style
-{
-    if (self = [super initWithFrame:frame])
-    {
+- (id)initWithFrame:(CGRect)frame style:(LBXScanViewStyle*)style {
+    if (self = [super initWithFrame:frame]) {
         self.viewStyle = style;
         self.backgroundColor = [UIColor clearColor];
     }
@@ -57,12 +55,11 @@ NS_ASSUME_NONNULL_END
 }
 
 
-- (void)drawRect:(CGRect)rect
-{
+- (void)drawRect:(CGRect)rect {
     [self drawScanRect];
 }
-- (void)startDeviceReadyingWithText:(NSString*)text
-{
+
+- (void)startDeviceReadyingWithText:(NSString*)text {
     int XRetangleLeft = _viewStyle.xScanRetangleOffset;
     
     CGSize sizeRetangle = CGSizeMake(self.frame.size.width - XRetangleLeft*2, self.frame.size.width - XRetangleLeft*2);
@@ -82,8 +79,7 @@ NS_ASSUME_NONNULL_END
     CGFloat YMinRetangle = self.frame.size.height / 2.0 - sizeRetangle.height/2.0 - _viewStyle.centerUpOffset;
     
     //设备启动状态提示
-    if (!_activityView)
-    {
+    if (!_activityView) {
         self.activityView = [[UIActivityIndicatorView alloc]init];
         
         [_activityView setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
@@ -109,18 +105,13 @@ NS_ASSUME_NONNULL_END
         [self addSubview:_labelReadying];
         [_activityView startAnimating];
     }
-
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
-    
-    
 }
 
-- (void)stopDeviceReadying
-{
+- (void)stopDeviceReadying {
     if (_activityView) {
         
         [_activityView stopAnimating];
@@ -136,12 +127,9 @@ NS_ASSUME_NONNULL_END
 /**
  *  开始扫描动画
  */
-- (void)startScanAnimation
-{
-    switch (_viewStyle.anmiationStyle)
-    {
-        case LBXScanViewAnimationStyle_LineMove:
-        {
+- (void)startScanAnimation {
+    switch (_viewStyle.anmiationStyle) {
+        case LBXScanViewAnimationStyle_LineMove: {
             //线动画
             if (!_scanLineAnimation)
                 self.scanLineAnimation = [[LBXScanLineAnimation alloc]init];
@@ -150,8 +138,7 @@ NS_ASSUME_NONNULL_END
                                                  Image:_viewStyle.animationImage];
         }
             break;
-        case LBXScanViewAnimationStyle_NetGrid:
-        {
+        case LBXScanViewAnimationStyle_NetGrid: {
             //网格动画
             if (!_scanNetAnimation)
                 self.scanNetAnimation = [[LBXScanNetAnimation alloc]init];
@@ -160,8 +147,7 @@ NS_ASSUME_NONNULL_END
                                                 Image:_viewStyle.animationImage];
         }
             break;
-        case LBXScanViewAnimationStyle_LineStill:
-        {
+        case LBXScanViewAnimationStyle_LineStill: {
             if (!_scanLineStill) {
                 
                 CGRect stillRect = CGRectMake(_scanRetangleRect.origin.x+20,
@@ -177,16 +163,12 @@ NS_ASSUME_NONNULL_END
         default:
             break;
     }
-
 }
-
-
 
 /**
  *  结束扫描动画
  */
-- (void)stopScanAnimation
-{
+- (void)stopScanAnimation {
     if (_scanLineAnimation) {
         [_scanLineAnimation stopAnimating];
     }
@@ -200,16 +182,13 @@ NS_ASSUME_NONNULL_END
     }
 }
 
-
-- (void)drawScanRect
-{
+- (void)drawScanRect {
     int XRetangleLeft = _viewStyle.xScanRetangleOffset;
     
     CGSize sizeRetangle = CGSizeMake(self.frame.size.width - XRetangleLeft*2, self.frame.size.width - XRetangleLeft*2);
     
     //if (!_viewStyle.isScanRetangelSquare)
-    if (_viewStyle.whRatio != 1)
-    {        
+    if (_viewStyle.whRatio != 1) {
         CGFloat w = sizeRetangle.width;
         CGFloat h = w / _viewStyle.whRatio;
         
@@ -229,7 +208,6 @@ NS_ASSUME_NONNULL_END
     NSLog(@"frame:%@",NSStringFromCGRect(self.frame));
     
     CGContextRef context = UIGraphicsGetCurrentContext();
-    
     
     //非扫码区域半透明
     {
@@ -269,8 +247,7 @@ NS_ASSUME_NONNULL_END
         CGContextStrokePath(context);
     }
     
-    if (_viewStyle.isNeedShowRetangle)
-    {
+    if (_viewStyle.isNeedShowRetangle) {
         //中间画矩形(正方形)
         CGContextSetStrokeColorWithColor(context, _viewStyle.colorRetangleLine.CGColor);
         CGContextSetLineWidth(context, 1);
@@ -301,27 +278,21 @@ NS_ASSUME_NONNULL_END
     //diffAngle = linewidthAngle/2;  //框4个角 在线上加4个角效果
     //diffAngle = 0;//与矩形框重合
     
-    switch (_viewStyle.photoframeAngleStyle)
-    {
-        case LBXScanViewPhotoframeAngleStyle_Outer:
-        {
+    switch (_viewStyle.photoframeAngleStyle) {
+        case LBXScanViewPhotoframeAngleStyle_Outer: {
             diffAngle = linewidthAngle/3;//框外面4个角，与框紧密联系在一起
         }
             break;
-        case LBXScanViewPhotoframeAngleStyle_On:
-        {
+        case LBXScanViewPhotoframeAngleStyle_On: {
             diffAngle = 0;
         }
             break;
-        case LBXScanViewPhotoframeAngleStyle_Inner:
-        {           
+        case LBXScanViewPhotoframeAngleStyle_Inner: {
             diffAngle = -_viewStyle.photoframeLineW/2;
             
         }
             break;
-            
-        default:
-        {
+        default: {
             diffAngle = linewidthAngle/3;
         }
             break;
@@ -378,16 +349,12 @@ NS_ASSUME_NONNULL_END
     CGContextStrokePath(context);
 }
 
-
-
 //根据矩形区域，获取识别区域
-+ (CGRect)getScanRectWithPreView:(UIView*)view style:(LBXScanViewStyle*)style
-{
++ (CGRect)getScanRectWithPreView:(UIView*)view style:(LBXScanViewStyle*)style {
     int XRetangleLeft = style.xScanRetangleOffset;
     CGSize sizeRetangle = CGSizeMake(view.frame.size.width - XRetangleLeft*2, view.frame.size.width - XRetangleLeft*2);
     
-    if (style.whRatio != 1)
-    {
+    if (style.whRatio != 1) {
         CGFloat w = sizeRetangle.width;
         CGFloat h = w / style.whRatio;
         
@@ -429,19 +396,15 @@ NS_ASSUME_NONNULL_END
         
         
     }
-    
-    
     return rectOfInterest;
 }
 
 //根据矩形区域，获取识别区域
-+ (CGRect)getZXingScanRectWithPreView:(UIView*)view style:(LBXScanViewStyle*)style
-{
++ (CGRect)getZXingScanRectWithPreView:(UIView*)view style:(LBXScanViewStyle*)style {
     int XRetangleLeft = style.xScanRetangleOffset;
     CGSize sizeRetangle = CGSizeMake(view.frame.size.width - XRetangleLeft*2, view.frame.size.width - XRetangleLeft*2);
     
-    if (style.whRatio != 1)
-    {
+    if (style.whRatio != 1) {
         CGFloat w = sizeRetangle.width;
         CGFloat h = w / style.whRatio;
         
@@ -464,6 +427,5 @@ NS_ASSUME_NONNULL_END
     
     return cropRect;
 }
-
 
 @end

@@ -10,10 +10,8 @@
 
 @implementation LBXScanViewStyle
 
-- (id)init
-{
-    if (self =  [super init])
-    {
+- (instancetype)init {
+    if (self =  [super init]) {
         _isNeedShowRetangle = YES;
         
         _whRatio = 1.0;
@@ -35,7 +33,6 @@
         _photoframeLineW = 7;
         
     }
-    
     return self;
 }
 
